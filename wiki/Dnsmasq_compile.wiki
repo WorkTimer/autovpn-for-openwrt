@@ -1,0 +1,18 @@
+#summary dnsmasq 编译 for Openwrt
+
+
+= dnsmasq 编译 for Openwrt =
+
+下载配置好的dnsmasq autovpn 版本源码：
+{{{
+wget http://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq-2.66-src-autovpn-for-openwrt.tar.gz
+}}}
+
+此上源码包包含了dnsmasq-autovpn.patch，同时修改了init脚本以支持user 和server-script参数。下载完成后解压替换attitude_adjustment_12.09/package/dnsmasq 文件夹即可
+
+然后编译dnsmasq：
+{{{
+make package/dnsmasq/clean
+make package/dnsmasq/compile V=99
+}}}
+attitude_adjustment_12.09/bin/ar71xx/packages 下找到 编译好的ipk包，上传到openwrt 然后安装即可
