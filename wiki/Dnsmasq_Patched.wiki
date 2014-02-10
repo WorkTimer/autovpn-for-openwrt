@@ -103,7 +103,7 @@ fi
 chmod +x /usr/bin/autopvpn.sh
 }}}
 
-7) 将/usr/bin/autopvpn.sh 加入  /etc/crontab/root：
+7) 将/usr/bin/autopvpn.sh 加入  /etc/crontabs/root：
 {{{
 */1 * * * * /usr/bin/autopvpn.sh
 }}}
