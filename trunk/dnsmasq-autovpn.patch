@@ -132,7 +132,7 @@ index b2596ec..a997911 100644
        ret_err(_("unsupported option (check that dnsmasq was compiled with DHCP/TFTP/DBus support)"));
        
 diff --git a/src/rfc1035.c b/src/rfc1035.c
-index 8d55ffd..065a525 100644
+index 8d55ffd..43aa382 100644
 --- a/src/rfc1035.c
 +++ b/src/rfc1035.c
 @@ -777,7 +777,7 @@ static int find_soa(struct dns_header *header, size_t qlen, char *name)
@@ -144,17 +144,19 @@ index 8d55ffd..065a525 100644
  {
    unsigned char *p, *p1, *endrr, *namep;
    int i, j, qtype, qclass, aqtype, aqclass, ardlen, res, searched_soa = 0;
-@@ -916,6 +916,9 @@ int extract_addresses(struct dns_header *header, size_t qlen, char *name, time_t
+@@ -915,7 +915,10 @@ int extract_addresses(struct dns_header *header, size_t qlen, char *name, time_t
+ 	    cname_loop1:
  	      if (!(p1 = skip_questions(header, qlen)))
  		return 0;
- 	      
-+              char *ips=(char *)malloc(header->ancount*16);
+-	      
++
++              char *ips=0;
 +	      int offset = 0;
 +              char ip[INET6_ADDRSTRLEN];
  	      for (j = ntohs(header->ancount); j != 0; j--) 
  		{
  		  if (!(res = extract_name(header, qlen, &p1, name, 0, 10)))
-@@ -980,7 +983,14 @@ int extract_addresses(struct dns_header *header, size_t qlen, char *name, time_t
+@@ -980,7 +983,19 @@ int extract_addresses(struct dns_header *header, size_t qlen, char *name, time_t
  				add_to_ipset(*ipsets_cur++, &addr, flags, 0);
  			    }
  #endif
@@ -164,27 +166,34 @@ index 8d55ffd..065a525 100644
 +			       if (!inet_ntop(AF_INET, (void *)&addr.addr.addr4, ip, sizeof(ip))) {
 +				  printf("error:inet_ntop\n");
 +			       }else{
-+			          offset+=sprintf(ips + offset,"%s,",ip);
++                                  if (!ips){
++                                      //printf("ancount:%d\n",ntohs(header->ancount));
++                                      ips=(char *)safe_malloc(ntohs(header->ancount)*16);
++                                  }
++                                  if (ips)
++			              offset+=sprintf(ips + offset,"%s,",ip);
 +			       }
 +			    }
  			  newc = cache_insert(name, &addr, now, attl, flags | F_FORWARD);
  			  if (newc && cpp)
  			    {
-@@ -995,6 +1005,19 @@ int extract_addresses(struct dns_header *header, size_t qlen, char *name, time_t
+@@ -995,6 +1010,21 @@ int extract_addresses(struct dns_header *header, size_t qlen, char *name, time_t
  		  if (!CHECK_LEN(header, p1, qlen, 0))
  		    return 0; /* bad packet */
  		}
-+		if (vpn_domain && (flags & (F_IPV4|F_IPV6)) && aqtype == T_A){
++		if (offset){
 +			ips[offset - 1] = '\0';
-+			char *cmd=(char *)malloc(strlen(ips)+strlen(daemon->script)+10);
-+			sprintf(cmd, "%s %s", daemon->script,ips);
-+			//printf("%s\n",cmd);
-+			int status=WEXITSTATUS(system(cmd));
-+			if (status != 0)
-+			    printf("script_exec_error: %d\n",status);
-+			free(cmd);
-+			free(ips);
-+                        cmd=0;
++			char *cmd=(char *)safe_malloc(strlen(ips)+strlen(daemon->script)+10);
++                        if (cmd){
++			    sprintf(cmd, "%s %s", daemon->script,ips);
++			    //printf("%s\n",cmd);
++			    int status=WEXITSTATUS(system(cmd));
++			    if (status != 0)
++			        printf("script_exec_error: %d\n",status);
++                            free(cmd);
++                            cmd=0;
++                        }
++                        free(ips);
 +                        ips=0;
 +		}
  	    }
