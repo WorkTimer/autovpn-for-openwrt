@@ -1,15 +1,25 @@
 config dnsmasq
-        option boguspriv '1'
-        option user 'root'
-        option localise_queries '1'
-        option local '/lan/'
-        option domain 'lan'
-        option expandhosts '1'
-        option authoritative '1'
-        option readethers '1'
-        option leasefile '/tmp/dhcp.leases'
-        option rebind_protection '1'
-        option rebind_localhost '1'
+	option domainneeded	1
+	option boguspriv	1
+	option filterwin2k	0  # enable for dial on demand
+	option localise_queries	1
+	option rebind_protection 1  # disable if upstream must serve RFC1918 addresses
+	option rebind_localhost 1  # enable for RBL checking and similar services
+	#list rebind_domain example.lan  # whitelist RFC1918 responses for domains
+	option local	'/lan/'
+	option domain	'lan'
+	option expandhosts	1
+	option nonegcache	0
+	option authoritative	1
+	option readethers	1
+	option leasefile	'/tmp/dhcp.leases'
+	option resolvfile	'/tmp/resolv.conf.auto'
+	#list server		'/mycompany.local/1.2.3.4'
+	#option nonwildcard	1
+	#list interface		br-lan
+	#list notinterface	lo
+	#list bogusnxdomain     '64.94.110.11'
+	option user	'root'
         option server_script '/usr/bin/routeadd.sh'
         list server '/0rz.tw/0to255.com/10musume.com/123rf.com/12bet.com/8.8.8.8'
         list server '/12vpn.com/173ng.com/1984bbs.com/1984bbs.org/1-apple.com.tw/8.8.8.8'
@@ -469,15 +479,14 @@ config dnsmasq
         list server '/zillionk.com/zinio.com/ziplib.com/zkaip.com/zlib.net/8.8.8.8'
         list server '/zmw.cn/zomobo.net/zonaeuropa.com/zootool.com/zoozle.net/8.8.8.8'
         list server '/zozotown.com/zsrhao.com/zuo.la/zuola.com/zvereff.com/8.8.8.8'
-        list server '/googleapis.com/8.8.8.8'
+        list server '/googleapis.com/t.co/8.8.8.8'
 
-config dhcp 'lan'
-        option interface 'lan'
-        option leasetime '12h'
-        option start '101'
-        option limit '154'
-        option force '1'
+config dhcp lan
+	option interface	lan
+	option start 	100
+	option limit	150
+	option leasetime	12h
 
-config dhcp 'wan'
-        option interface 'wan'
-        option ignore '1'
+config dhcp wan
+	option interface	wan
+	option ignore	1
