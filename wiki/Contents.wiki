@@ -1,4 +1,20 @@
 #summary 目录
 
+
+= 工作原理 =
+ # 为防止DNS污染，将IP：8.8.8.8 加入路由表，出口指向vpn接口（防止8.8.8.8被劫持）
+ # dnsmasq 配置中为被墙域名指定特定的DNS解析服务器（server=/xxxx.com/8.8.8.8）
+ # dnsmasq 检查如为被墙域名，调用脚本将解析结果中的IP加入路由表出口为vpn接口（server-script=/path/to/routeadd.sh）
+
+
+以google.com为例
+将域名配置到dnsmasq.conf中（openwrt为/etc/config/dhcp），通过8.8.8.8解析：
+{{{
+server=/google.com/8.8.8.8
+}}}
+用户访问google.com，首先发起dns查询，dnsmasq接收并将请求转发给8.8.8.8，dnsmasq从8.8.8.8得到域名解析结果，检查请求的域名是否在server=/xxx/xxx 的配置中（是否被墙），找到后传递解析结果给 --server-script 指定的脚本并执行，将这些IP加入路由表，出口指向vpn接口。然后dnsmasq把解析结果发给用户，用户得到google.com服务器IP发起连接，dnsmasq所在路由器根据路由表将目的为这些IP的流量通过vpn传输。
+
+= 安装配置 =
+
   # [https://code.google.com/p/autovpn-for-openwrt/wiki/All-in-one 快速部署] （新手，有海外vps）
   # [https://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_Patched 全手动部署]
