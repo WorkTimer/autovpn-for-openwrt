@@ -42,6 +42,10 @@ iptables -I FORWARD -o pvpn -j ACCEPT
 iptables -t nat -I POSTROUTING -o tun+ -j MASQUERADE
 iptables -I FORWARD -o tun+ -j ACCEPT
 }}}
+重启防火墙：
+{{{
+/etc/init.d/firewall restart
+}}}
 
 以下内容加入/etc/crontabs/root 文件，自动连接vpn：
 {{{
