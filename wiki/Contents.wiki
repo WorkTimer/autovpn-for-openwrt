@@ -1,0 +1,4 @@
+#目录
+
+  # [https://code.google.com/p/autovpn-for-openwrt/wiki/All-in-one 快速部署] （新手，有海外vps）
+  # [https://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_Patched 全手动部署]
