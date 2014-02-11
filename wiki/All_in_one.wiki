@@ -1,0 +1,59 @@
+#summary 集成包安装
+<font color="red">最后更新：2014-02-11
+    更新内容请在source -> Changes查看</font>
+
+= Openwrt端配置 =
+首先安装ip包(<font color="red">脚本中要使用ip命令</font>)：
+{{{
+opkg update
+opkg install ip
+}}}
+
+下载安装[https://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq_all-in-one_2.66-3_ar71xx.ipk dnsmasq_all-in-one_2.66-3_ar71xx.ipk]：
+{{{
+wget -O /tmp/dnsmasq_all-in-one_2.66-3_ar71xx.ipk https://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq_all-in-one_2.66-3_ar71xx.ipk 
+opkg remove dnsmasq
+opkg install /tmp/dnsmasq_all-in-one_2.66-3_ar71xx.ipk 
+}}}
+
+修改vpn配置文件/etc/autovpn.conf：
+{{{
+SSH_SERVER=ssh-server             #ssh服务器ip或域名，必需修改
+SSH_PORT=22                       #ssh服务器端口
+SSH_KEY=/root/.ssh/id_rsa         #私钥文件
+SSH_KEY_PUB=/root/.ssh/id_rsa.pub #公钥文件
+ROUTES=/tmp/routes.txt            #路由表保存文件
+}}}
+
+生成密钥对并上传至服务器：
+{{{
+. /etc/autovpn.conf
+mkdir /root/.ssh
+dropbearkey -t rsa -s 1024 -f $SSH_KEY|grep -v "Public key portion is:\|Fingerprint" >$SSH_KEY_PUB
+cat /root/.ssh/id_rsa.pub |ssh -p $SSH_PORT root@$SSH_SERVER "mkdir ~/.ssh;cat >>~/.ssh/authorized_keys"
+}}}
+
+防火墙配置文件/etc/firewall.user加下以下内容：
+{{{
+iptables -t nat -I POSTROUTING -o pvpn -j MASQUERADE
+iptables -I FORWARD -o pvpn -j ACCEPT
+
+iptables -t nat -I POSTROUTING -o tun+ -j MASQUERADE
+iptables -I FORWARD -o tun+ -j ACCEPT
+}}}
+
+以下内容加入/etc/crontabs/root 文件，自动连接vpn：
+{{{
+*/1 * * * * /usr/bin/autopvpn.sh
+}}}
+
+重新加载cron配置：
+
+/etc/init.d/cron reload
+
+
+= 服务器端配置 =
+ssh server 上启用源地址转换（SNAT），执行以下代码，并加入/etc/rc.local文件：
+{{{
+iptables -A POSTROUTING -s 10.0.0.0/8 -j MASQUERADE
+}}}
