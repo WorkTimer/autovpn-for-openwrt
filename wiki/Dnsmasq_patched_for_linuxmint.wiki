@@ -1,7 +1,7 @@
 #summary 方案二 for linuxmint (ubuntu?)
 
 = 配置vpn =
-略（详见 [https://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_Patched Dnsmasq_Patched for openwrt]）
+略（详见 [https://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_Patched#1.%E5%BB%BA%E7%AB%8Bvpn%E8%BF%9E%E6%8E%A5%28%E4%B8%89%E9%80%89%E4%B8%80%29 Dnsmasq_Patched for openwrt]）
 
 = 安装Dnsmasq =
 首先要说明一下，目前大多数linux桌面发行版的NetworkManager已经集成了dnsmasq插件，所以系统里已经安装了dnsmasq。
@@ -35,7 +35,7 @@ sudo apt-get install dnsmasq
 {{{
 wget https://autoproxy-gfwlist.googlecode.com/svn/trunk/gfwlist.txt -O -| base64 -d  >gfwlist.txt
 }}}
-下载这两个脚本放同一目录下：[http://autovpn-for-openwrt.googlecode.com/svn/trunk/genDnsmasq.sh genDnsmasq.sh] [http://autovpn-for-openwrt.googlecode.com/svn/trunk/genDnsmasq.sh autoproxy2dnsmasq]
+下载这两个脚本放同一目录下：[http://autovpn-for-openwrt.googlecode.com/svn/trunk/script/genDnsmasq.sh genDnsmasq.sh] [http://autovpn-for-openwrt.googlecode.com/svn/trunk/script/genDnsmasq.sh autoproxy2dnsmasq]
 
 将被墙域名列表转换成dnsmasq配置格式：
 {{{
@@ -48,25 +48,9 @@ server_script=/usr/bin/routeadd.sh
 user=root
 }}}
 
-创建 /usr/bin/routeadd.sh ，加入如下内容，请修改注释前的内容：
+下载路由维护脚本，添加执行权限：
 {{{
-#!/bin/sh
-DEV=`ifconfig |grep -e "tun[0-9]\|pvpn"|cut -d" " -f 1` #如果有多个tun的接口名请把DEV=后替换成要使用的vpn接口名
-IPS=`echo $1|tr "," "\n"`
-if 
-if [ -n "IPS" ] ;then
-    for ip in $IPS ;do
-        ip route get $ip|grep -q $VPNDEV
-        if [ $? -ne 0 ];then
-            echo "add $ip to route table"
-            ip route add $ip dev $DEV
-        fi
-    done
-fi
-}}}
-
-添加执行权限：
-{{{
+wget -O /usr/bin/routeadd.sh http://autovpn-for-openwrt.googlecode.com/svn/trunk/script/routeadd.sh
 chmod +x /usr/bin/routeadd.sh
 }}}
 
