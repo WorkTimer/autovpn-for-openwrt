@@ -14,6 +14,7 @@ opkg install ip
 wget -O /tmp/dnsmasq_all-in-one_2.66-3_ar71xx.ipk https://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq_all-in-one_2.66-3_ar71xx.ipk 
 opkg remove dnsmasq
 opkg install /tmp/dnsmasq_all-in-one_2.66-3_ar71xx.ipk 
+/etc/init.d/dnsmasq restart
 }}}
 
 修改vpn配置文件/etc/autovpn.conf：
@@ -56,4 +57,11 @@ iptables -I FORWARD -o tun+ -j ACCEPT
 ssh server 上启用源地址转换（SNAT），执行以下代码，并加入/etc/rc.local文件：
 {{{
 iptables -A POSTROUTING -s 10.0.0.0/8 -j MASQUERADE
+}}}
+
+= 新增翻墙域名 =
+如让域名 autovpn-for-openwrt.googlecode.com 翻墙
+{{{
+echo "server=/autovpn-for-openwrt.googlecode.com/8.8.8.8" >>/etc/autovpn/vpn.conf
+/etc/init.d/dnsmasq restart
 }}}
