@@ -1,6 +1,6 @@
 #summary 方案二
 
-<font color="red">最后更新：2014-01-22
+<font color="red">最后更新：2014-02-11
     更新内容请在source -> Changes查看</font>
 
 注：为了使操作教程尽量清楚简洁，很多地方没做过多说明，您有疑问、意见、建议请M我，一起探讨。
@@ -25,20 +25,33 @@ pvpn 有两种隧道模式：
 更具体的使用方法请移步至：[https://code.google.com/p/pvpn-for-openwrt/ pvpn-for-openwrt 项目主页]。
 
 
-1) 下载pvpn for openwrt 放到 openwrt 路由器的/usr/bin/目录下，并添加执行权限：
+1) 下载pvpn for openwrt、autopvpn.sh、autovpn.conf 到 openwrt 相应目录下，并添加执行权限：
 {{{
 wget -O /usr/bin/pvpn http://pvpn-for-openwrt.googlecode.com/svn/trunk/pvpn
-chmod +x /usr/bin/pvpn
+wget -O /usr/bin/autopvpn.sh http://autovpn-for-openwrt.googlecode.com/svn/trunk/script/autopvpn.sh
+#如果使用ssh layer3模式修改autopvpn.sh 文件中pvpn 所在行为：pvpn -t ssh-3 root@$SSH_SERVER 8.8.8.8
+wget -O /etc/autovpn.conf http://autovpn-for-openwrt.googlecode.com/svn/trunk/script/autovpn.conf
+chmod +x /usr/bin/pvpn /usr/bin/autopvpn.sh
 }}}
 
-2) 在openwrt下生成密钥，并加入到ssh 服务器的/root/.ssh/authorized_keys的文件中
+2) 修改vpn配置文件 autopvpn.conf：
 {{{
-mkdir /root/.ssh
-dropbearkey -t rsa -s 1024 -f /root/.ssh/id_rsa|grep -v "Public key portion is:\|Fingerprint" >/root/.ssh/id_rsa.pub
-cat /root/.ssh/id_rsa.pub |ssh root@server "mkdir ~/.ssh;cat >>~/.ssh/authorized_keys"  #上传公钥到ssh服务器,请把server换成您自己的服务器ip
+SSH_SERVER=ssh-server             #ssh服务器ip或域名，必需修改
+SSH_PORT=22                       #ssh服务器端口
+SSH_KEY=/root/.ssh/id_rsa         #私钥文件
+SSH_KEY_PUB=/root/.ssh/id_rsa.pub #公钥文件
+ROUTES=/tmp/routes.txt            #路由表保存文件
 }}}
 
-3) 如果您没使用-t ssh-3 参数，即ssh layer3模式，请跳过该步骤：
+3) 在openwrt下生成密钥对并上传到服务器：
+{{{
+. /etc/autovpn.conf
+mkdir /root/.ssh
+dropbearkey -t rsa -s 1024 -f $SSH_KEY|grep -v "Public key portion is:\|Fingerprint" >$SSH_KEY_PUB
+cat /root/.ssh/id_rsa.pub |ssh -p $SSH_PORT root@$SSH_SERVER "mkdir ~/.ssh;cat >>~/.ssh/authorized_keys"
+}}}
+
+4) 如果您没使用-t ssh-3 参数，即ssh layer3模式，请跳过该步骤：
 
 安装所需包
 {{{
@@ -49,6 +62,7 @@ opkg install kmod-tun
 
 opkg install dropbearconvert
 dropbearconvert dropbear openssh /root/.ssh/id_rsa /root/.ssh/id_rsa_openssh  #将dropbear格式私钥转为 openssh格式
+mv /root/.ssh/id_rsa_openssh /root/.ssh/id_rsa #覆盖原私钥
 }}}
 
 ssh server 上启用TUN隧道支持：
@@ -57,40 +71,12 @@ echo "PermitTunnel yes" >>/etc/ssh/sshd_config
 /etc/init.d/ssh reload
 }}}
 
-4) ssh server 上启用源地址转换（SNAT）：
+5) ssh server 上启用源地址转换（SNAT）：
 {{{
 iptables -A POSTROUTING -s 10.0.0.0/8 -j MASQUERADE
 }}}
 
-5) openwrt路由器上创建 /usr/bin/autopvpn.sh 自动连接vpn（断线重连）脚本，ssh用户名、主机名请根据您的情况做修改。
-{{{
-#!/bin/sh
-
-ROUTES_FILE=/tmp/routes.txt
-
-ps |grep -v grep|grep -qe "ssh.*-TCf\|pppd ifname pvpn"
-if [ $? -ne 0 ] ;then
-    echo "[ `date +'%Y/%m/%d %H:%M:%S'` ] restart pvpn" >>/tmp/autopvpn.log
-    export SSH_ARGS="-p 22 -i /root/.ssh/id_rsa"
-    pvpn root@ssh-server 8.8.8.8
-    #如果安装了3）步中的 openssh-client 包，请删除上面两行，然后去掉下面两行前的注释 “#”
-    #export SSH_ARGS="-p 22 -i /root/.ssh/id_rsa_openssh"
-    #pvpn -t ssh-3 root@ssh-server 8.8.8.8
-    kill -HUP `pgrep dnsmasq` #清空DNS缓存
-    while read route ; do
-        ip route add $route
-    done <$ROUTES_FILE
-else
-    ip route list scope link|grep "pvpn\|tun[0-9]"|grep -v "^10." >$ROUTES_FILE
-fi
-}}}
-
-6) 增加执行权限：
-{{{
-chmod +x /usr/bin/autopvpn.sh
-}}}
-
-7) 将/usr/bin/autopvpn.sh 加入  /etc/crontabs/root：
+6) 将/usr/bin/autopvpn.sh 加入  /etc/crontabs/root：
 {{{
 */1 * * * * /usr/bin/autopvpn.sh
 }}}
@@ -140,6 +126,7 @@ iptables -I FORWARD -o pvpn -j ACCEPT
 {{{
 rm /tmp/opkg-lists/*
 wget -O /tmp/dnsmasq_patched_2.66-3_ar71xx.ipk http://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq_patched_2.66-3_ar71xx.ipk
+opkg remove dnsmasq
 opkg install /tmp/dnsmasq_patched_2.66-3_ar71xx.ipk 
 }}}
 
@@ -148,9 +135,9 @@ opkg install /tmp/dnsmasq_patched_2.66-3_ar71xx.ipk
 注：因我手头设备有限，无法编译其它更多设备的ipk包，如有需要请提供设备型号，编译好后我会更新到本项目svn
 
 ==4.将被墙域名加入dnsmasq==
-您可以直接使用本项目中的dnsmasq的示例配置文件[http://autovpn-for-openwrt.googlecode.com/svn/trunk/dhcp dhcp]。
+您可以直接使用本项目中的dnsmasq的示例配置文件[http://autovpn-for-openwrt.googlecode.com/svn/trunk/vpn.conf vpn.conf]。
 {{{
-wget -O /etc/config/dhcp http://autovpn-for-openwrt.googlecode.com/svn/trunk/dhcp
+wget -O /etc/autovpn/vpn.conf http://autovpn-for-openwrt.googlecode.com/svn/trunk/vpn.conf
 }}}
 
 还可以按下面的方法自己生成被墙域名列表，以下操作要在linux下（非openwrt）完成：
@@ -159,51 +146,29 @@ wget -O /etc/config/dhcp http://autovpn-for-openwrt.googlecode.com/svn/trunk/dhc
 {{{
 wget -O - http://autoproxy-gfwlist.googlecode.com/svn/trunk/gfwlist.txt| base64 -d  >gfwlist.txt
 }}}
-下载这两个脚本放同一目录下：[http://autovpn-for-openwrt.googlecode.com/svn/trunk/genDnsmasq.sh genDnsmasq.sh] [http://autovpn-for-openwrt.googlecode.com/svn/trunk/autoproxy2domain autoproxy2domain]
+下载这两个脚本放同一目录下：[http://autovpn-for-openwrt.googlecode.com/svn/trunk/script/genDnsmasq.sh genDnsmasq.sh] [http://autovpn-for-openwrt.googlecode.com/svn/trunk/script/autoproxy2domain autoproxy2domain]
 
 2) 生成dnsmasq配置：
 {{{
-genDnsmasq gfwlist.txt openwrt #不加openwrt参数生成的为原生dnsmasq配置格式
+genDnsmasq gfwlist.txt #后面增加openwrt参数生成的为openwrt 格式dnsmasq配置文件
 }}}
 
 如果您要翻墙的域名，没有在生成的域名列表中请自行添加。
 
 如果主域名翻墙，其下的某个子域名不翻墙，如下配置(以google为例):
 {{{
-list server '/google.com/8.8.8.8'
-list server '/code.google.com/#'
+server=/google.com/8.8.8.8
+server=/code.google.com/#
 }}}
 
-3) 将生成的dnsmasq.conf文件中的内容加入到/etc/config/dhcp的config dnsmasq配置段，并加入以下两个配置,之后重启dnsmasq服务：
-{{{
-option server_script '/usr/bin/routeadd.sh'
-option user 'root'
-}}}
-
-4) 重启dnsmasq：
+3) 将生成的dnsmasq.conf文件中的内容追加入到/etc/autovpn/vpn.conf文件，之后重启dnsmasq服务：
 {{{
 /etc/init.d/dnsmasq restart
 }}}
 
-==5.创建路由表维护脚本==
-1) 创建 /usr/bin/routeadd.sh ，加入以下内容：
+==5.下载路由表维护脚本==
 {{{
-#!/bin/sh
-DEV=`ifconfig |grep -e "tun[0-9]\|pvpn"|cut -d" " -f 1` #如果您有多个tun接口或没有使用pvpn，请把DEV=后改为要使用的vpn接口名
-IPS=`echo $1|tr "," "\n"`
-if [ -n "$IPS" ] ;then
-    for ip in $IPS ;do
-        ip route get $ip|grep -q $DEV
-        if [ $? -ne 0 ];then
-            echo "add $ip to route table"
-            ip route add $ip dev $DEV
-        fi
-    done
-fi
-}}}
-
-2) 添加执行权限：
-{{{
+wget -O /usr/bin/routeadd.sh http://autovpn-for-openwrt.googlecode.com/svn/trunk/script/routeadd.sh
 chmod +x /usr/bin/routeadd.sh
 }}}
 
