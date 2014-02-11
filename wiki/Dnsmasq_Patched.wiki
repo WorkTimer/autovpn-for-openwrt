@@ -3,8 +3,6 @@
 <font color="red">最后更新：2014-02-11
     更新内容请在source -> Changes查看</font>
 
-注：为了使操作教程尽量清楚简洁，很多地方没做过多说明，您有疑问、意见、建议请M我，一起探讨。
-
 = 安装配置 =
 首先安装ip包(<font color="red">脚本中要使用ip命令</font>)：
 {{{
@@ -34,7 +32,7 @@ wget -O /etc/autovpn.conf http://autovpn-for-openwrt.googlecode.com/svn/trunk/sc
 chmod +x /usr/bin/pvpn /usr/bin/autopvpn.sh
 }}}
 
-2) 修改vpn配置文件 autopvpn.conf：
+2) 修改vpn配置文件 /etc/autovpn.conf：
 {{{
 SSH_SERVER=ssh-server             #ssh服务器ip或域名，必需修改
 SSH_PORT=22                       #ssh服务器端口
@@ -62,7 +60,7 @@ opkg install kmod-tun
 
 opkg install dropbearconvert
 dropbearconvert dropbear openssh /root/.ssh/id_rsa /root/.ssh/id_rsa_openssh  #将dropbear格式私钥转为 openssh格式
-mv /root/.ssh/id_rsa_openssh /root/.ssh/id_rsa #覆盖原私钥
+mv /root/.ssh/id_rsa_openssh /root/.ssh/id_rsa #覆盖旧私钥
 }}}
 
 ssh server 上启用TUN隧道支持：
@@ -150,7 +148,7 @@ wget -O - http://autoproxy-gfwlist.googlecode.com/svn/trunk/gfwlist.txt| base64 
 
 2) 生成dnsmasq配置：
 {{{
-genDnsmasq gfwlist.txt #后面增加openwrt参数生成的为openwrt 格式dnsmasq配置文件
+genDnsmasq gfwlist.txt #后面增加 openwrt 参数生成的为openwrt 格式dnsmasq配置文件
 }}}
 
 如果您要翻墙的域名，没有在生成的域名列表中请自行添加。
