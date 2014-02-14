@@ -9,9 +9,9 @@ opkg update
 opkg install ip
 }}}
 
-下载安装[https://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq_all-in-one_2.66-3_ar71xx.ipk dnsmasq_all-in-one_2.66-3_ar71xx.ipk]：
+下载安装[http://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq_all-in-one_2.66-3_ar71xx.ipk dnsmasq_all-in-one_2.66-3_ar71xx.ipk]：
 {{{
-wget -O /tmp/dnsmasq_all-in-one_2.66-3_ar71xx.ipk https://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq_all-in-one_2.66-3_ar71xx.ipk 
+wget -O /tmp/dnsmasq_all-in-one_2.66-3_ar71xx.ipk http://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq_all-in-one_2.66-3_ar71xx.ipk 
 opkg remove dnsmasq
 opkg install /tmp/dnsmasq_all-in-one_2.66-3_ar71xx.ipk 
 /etc/init.d/dnsmasq restart
