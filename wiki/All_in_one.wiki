@@ -47,7 +47,7 @@ iptables -I FORWARD -o tun+ -j ACCEPT
 /etc/init.d/firewall restart
 }}}
 
-执行autopvpn.sh手动连接pvpn，首次连接会提示是否接受服务器公钥，选择接受之后连接不会再提示。然后把autopvpn.sh加入到计划任务，每一分钟检查一次pvpn连接情况，断线重新连接：
+执行autopvpn.sh手动连接vpn，首次连接会提示是否接受服务器公钥，选择接受之后不会再提示。然后把autopvpn.sh加入到计划任务，每一分钟检查一次vpn连接情况，断线重新连接：
 {{{
 echo "*/1 * * * * /usr/bin/autopvpn.sh" >>/etc/crontabs/root
 }}}
