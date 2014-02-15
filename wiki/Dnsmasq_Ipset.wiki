@@ -60,7 +60,7 @@ iptables -I FORWARD -o pvpn -j ACCEPT
 }}}
 
 ==3.安装ipset-dns==
-如果你使用的是openwrt Attitude Adjustment (12.09 final)的话，可以从本项目trunk目录下载安装即可.某则您只能自己自己编译了，获取包：
+如果你使用的是openwrt Attitude Adjustment (12.09 final)的话，点击[http://autovpn-for-openwrt.googlecode.com/svn/trunk/ipset-dns_2013-05-03_ar71xx.ipk ipset-dns_2013-05-03_ar71xx.ipk]下载安装即可.某则您只能自己自己编译了，获取包：
 {{{
 svn co svn://svn.openwrt.org/openwrt/trunk/package/network/services/ipset-dns/
 }}}
