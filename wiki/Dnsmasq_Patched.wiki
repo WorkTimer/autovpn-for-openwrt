@@ -93,8 +93,12 @@ script-security 3 system
 新建文件 /usr/bin/vpnup.sh内容如下：
 {{{
 #!/bin/sh
+. /etc/autovpn.conf
 ip route del 8.8.8.8
 ip route add 8.8.8.8 dev $1
+while read route ; do
+    ip route add $route
+done 2>/dev/null <$ROUTES
 kill -HUP `pgrep dnsmasq` #清空DNS缓存
 }}}
 增加执行权限
