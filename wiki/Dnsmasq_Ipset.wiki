@@ -1,6 +1,6 @@
 #summary 方案一
 
-*注意：*从dnsmasq 2.66 版开发内置了ipset支持，openwrt 官方dnsmasq默认没有启用ipset，您可以自行编译并启用ipset，来替换本文档第3节中的ipset-dns软件。但相比之下使用ipset依然是不推荐的，具体原因[https://code.google.com/p/pvpn-for-openwrt/issues/detail?id=1 请点这里] 查看我的回复。
+*注意：*从dnsmasq 2.66 版开发内置了ipset支持，openwrt 官方dnsmasq默认没有启用ipset，您可以自行编译并启用ipset，来替换本文档第3节中的ipset-dns软件，但相比之下使用ipset依然是不推荐的。
 
 = 工作原理 =
  # 为防止DNS污染，将IP 8.8.8.8 加入路由表，出口指向vpn
@@ -20,40 +20,7 @@ opkg install ip
 ==1.建立vpn连接==
 
 ===1.1 pvpn(推荐使用,需有root用户权限)===
-用法见[https://code.google.com/p/pvpn-for-openwrt/ pvpn-for-openwrt]
-
-将你的ssh公钥加入到ssh server 的/root/.ssh/authorized_keys的文件中。
-
-ssh server 上启用SNAT：
-{{{
-iptables -A POSTROUTING -s 10.10.10.0/24 -j MASQUERADE
-}}}
-
-安装依赖包，如果使用-t ssh-3 即原生ssh 3层隧道需要安装kmod-tun模块
-{{{
-rm /usr/bin/ssh
-rm /usr/bin/scp
-opkg install ssh-client
-opkg install kmod-tun #只需使用ssh-3模式时安装
-}}}
-
-openwrt路由器上创建启动pvpn的脚本（断线重连），新建/usr/bin/sshvpn.sh，-i参数后的IP地址、ssh用户、服务器地址请自行修改：
-{{{
-ps |grep -v grep|grep "ssh -TCf"
-if [ $? -ne 0 ] ;then
-    echo "[ `date +'%Y/%m/%d %H:%M:%S'` ] restart pvpn" >>/var/log/sshvpn.log
-    pvpn -i 10.10.10.1:10.10.10.2 -t ssh-3 root@host 8.8.8.8 8.8.4.4
-    ip route flush table 1 2>/dev/null
-    ip rule del table 1 2>/dev/null
-    ip rule add fwmark 1 table 1 priority 1000
-    ip route add default via 10.10.10.2 table 1
-fi
-}}}
-
-将/usr/bin/sshvpn.sh 加入  /etc/crontab/root：
-{{{
-*/1 * * * * /usr/bin/sshvpn.sh
-}}}
+详见：[http://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_Patched#1.1_pvpn%28%E6%8E%A8%E8%8D%90%E4%BD%BF%E7%94%A8%EF%BC%8C%E9%9C%80%E6%9C%89root%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90%29]
 
 ===1.2 openvpn===
 
@@ -83,6 +50,9 @@ pptp没有自动添加路由的方法，请自行配置连接vpn，并将8.8.8.8
 {{{
 iptables -t nat -I POSTROUTING -o tun+ -j MASQUERADE
 iptables -I FORWARD -o tun+ -j ACCEPT
+
+iptables -t nat -I POSTROUTING -o pvpn -j MASQUERADE
+iptables -I FORWARD -o pvpn -j ACCEPT
 }}}
 应用防火墙配置：
 {{{
@@ -142,11 +112,11 @@ ipset-dns vpn 53000 8.8.8.8 #手动启动
 {{{
  wget https://autoproxy-gfwlist.googlecode.com/svn/trunk/gfwlist.txt -O -|base64 -d >gfwlist.txt
 }}}
-用[http://pvpn-for-openwrt.googlecode.com/ pvpn-for-openwrt]中提供的脚本[http://pvpn-for-openwrt.googlecode.com/svn/trunk/genDnsmasq.sh genDnsmasq.sh]（请同时下载[http://pvpn-for-openwrt.googlecode.com/svn/trunk/autoproxy2dnsmasq autoproxy2dnsmasq] 放同一目录下），生成dnsmasq的配置格式：
+用脚本[http://pvpn-for-openwrt.googlecode.com/svn/trunk/script/genDnsmasq.sh genDnsmasq.sh]（请同时下载[http://pvpn-for-openwrt.googlecode.com/svn/trunk/script/autoproxy2domain autoproxy2domain] 放同一目录下），修改genDnsmasq脚本中的“DNSServer=8.8.8.8”为“DNSServer=127.0.0.1#53000”，然后生成dnsmasq的配置格式：
 {{{
 genDnsmasq gfwlist.txt openwrt #不加openwrt参数生成的为原生dnsmasq配置格式
 }}}
-将生成的dnsmasq.conf中的内容加入dnsmasq 配置文件，重启dnsmasq服务。
+将生成的dnsmasq.conf中的内容加入dnsmasq 配置文件中config dnsmasq块中，重启dnsmasq服务。
 
 如果你不关心下面提到的问题，至此一切就ok了。
 
