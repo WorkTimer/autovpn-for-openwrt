@@ -20,7 +20,7 @@ opkg install ip
 ==1.建立vpn连接==
 
 ===1.1 pvpn(推荐使用,需有root用户权限)===
-详见：[http://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_Patched#1.1_pvpn%28%E6%8E%A8%E8%8D%90%E4%BD%BF%E7%94%A8%EF%BC%8C%E9%9C%80%E6%9C%89root%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90%29]
+详见：[http://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_Patched#1.1_pvpn%28%E6%8E%A8%E8%8D%90%E4%BD%BF%E7%94%A8%EF%BC%8C%E9%9C%80%E6%9C%89root%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90%29 pvpn配置]
 
 ===1.2 openvpn===
 
@@ -60,7 +60,9 @@ iptables -I FORWARD -o pvpn -j ACCEPT
 }}}
 
 ==3.安装ipset-dns==
-如果你使用的是openwrt Attitude Adjustment (12.09 final)的话，点击[http://autovpn-for-openwrt.googlecode.com/svn/trunk/ipset-dns_2013-05-03_ar71xx.ipk ipset-dns_2013-05-03_ar71xx.ipk]下载安装即可.某则您只能自己自己编译了，获取包：
+如果你使用的是openwrt Attitude Adjustment (12.09 final)的话，点击[http://autovpn-for-openwrt.googlecode.com/svn/trunk/ipset-dns_2013-05-03_ar71xx.ipk ipset-dns_2013-05-03_ar71xx.ipk]下载安装即可.
+
+某则您只能下载源码包，自己自己编译了，使用svn获取源码包：
 {{{
 svn co svn://svn.openwrt.org/openwrt/trunk/package/network/services/ipset-dns/
 }}}
