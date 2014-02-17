@@ -149,5 +149,5 @@ fi
 ipset-dns <ipset name> <port> <upstream dns> <script name>
 }}}
 
-可能您已经想到了，用了patch之后的ipset-dns，和[https://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_Patched 方案二]中用dnsmasq 的实现差不多的。
+可能您已经想到了，用了patch之后的ipset-dns，和[https://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_Patched 方案一]中用dnsmasq 的实现差不多的。
 最后如果没有特殊需求或不能接受修改dnsmasq源码的方式，请不要使用此方案。
