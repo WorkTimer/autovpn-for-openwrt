@@ -115,8 +115,8 @@ pptp没有自动添加路由的方法，请自行配置连接vpn，并将8.8.8.8
 iptables -t nat -I POSTROUTING -o tun+ -j MASQUERADE
 iptables -I FORWARD -o tun+ -j ACCEPT
 
-iptables -t nat -I POSTROUTING -o pvpn -j MASQUERADE
-iptables -I FORWARD -o pvpn -j ACCEPT
+iptables -t nat -I POSTROUTING -o pvpn+ -j MASQUERADE
+iptables -I FORWARD -o pvpn+ -j ACCEPT
 }}}
 应用防火墙配置：
 {{{
