@@ -40,8 +40,8 @@ cat /root/.ssh/id_rsa.pub |ssh -p $SSH_PORT root@$SSH_SERVER "mkdir ~/.ssh;cat >
 
 防火墙配置文件/etc/firewall.user加下以下内容：
 {{{
-iptables -t nat -I POSTROUTING -o pvpn -j MASQUERADE
-iptables -I FORWARD -o pvpn -j ACCEPT
+iptables -t nat -I POSTROUTING -o pvpn+ -j MASQUERADE
+iptables -I FORWARD -o pvpn+ -j ACCEPT
 
 iptables -t nat -I POSTROUTING -o tun+ -j MASQUERADE
 iptables -I FORWARD -o tun+ -j ACCEPT
