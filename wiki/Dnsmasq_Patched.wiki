@@ -124,12 +124,18 @@ iptables -I FORWARD -o pvpn -j ACCEPT
 }}}
 
 ==3.Openwrt安装dnsmasq_patched==
-如果您使用的是 openwrt Attitude Adjustment (12.09 final) ，并且路由器CPU是ar71xx系列的，那么直接在本项目trunk目录中下载[http://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq_patched_2.66-3_ar71xx.ipk dnsmasq_patched_2.66-3_ar71xx.ipk]，进行安装：
+请根据自己的设备类型下载适当的包装包
+
+   * [http://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq_patched_2.66-3_ar71xx.ipk dnsmasq_patched_2.66-3_ar71xx.ipk ] (适用于基于Atheros：AR7xxx/AR9xxx的路由器，如tp-link wr703n，水星mw4530r等) 
+   * [http://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq_all-in-one_2.66-5_ramips_24kec.ipk dnsmasq_all-in-one_2.66-5_ramips_24kec.ipk]（适用于基于ralink：RT3x5x/RT5350主板的路由器，如华美a100,a1,a2） 
+
+
+上传到路由器，进行安装：
 {{{
 rm /tmp/opkg-lists/*
-wget -O /tmp/dnsmasq_patched_2.66-3_ar71xx.ipk http://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq_patched_2.66-3_ar71xx.ipk
 opkg remove dnsmasq
-opkg install /tmp/dnsmasq_patched_2.66-3_ar71xx.ipk 
+opkg install /tmp/xxx.ipk #请替换成您使用的包名
+/etc/init.d/dnsmasq restart
 }}}
 
 非上述情况您只能自行下载dnsmasq 2.66 打上trunk中的[http://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq-autovpn.patch dnsmasq-autovpn.patch]补丁编译，详见 [http://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_compile Dnsmasq编译 for openwrt]。
