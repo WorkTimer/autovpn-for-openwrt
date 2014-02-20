@@ -12,9 +12,9 @@ opkg install ip
 ==1.建立vpn连接(三选一)==
 当然要翻墙，拥有自己的vpn是必要的，最好是自己的vps，限制会更少。
 
-目前PPTP L2tp Openvpn  SSH 都不同程度的受到了GFW的干扰，其中对SSH干扰是最小的，如果您的路由器flash空间足够则强列建议您使用pvpn-for-openwrt来做vpn隧道。如果使用openvpn建议使用静态key验证（服务器每个端口对应一个客户端）或使用打过obfuscate补丁的openvpn。
+目前PPTP L2tp Openvpn  SSH 都不同程度的受到了GFW的干扰，其中对SSH干扰是最小的，如果您的路由器flash空间足够则强列建议您使用pvpn-for-openwrt来做vpn隧道。如果使用openvpn建议使用打过obfuscate补丁的openvpn（未测试）。
 
-===1.1 pvpn(推荐flash空闲空间小于600k的用户使用) ===
+===1.1 pvpn(推荐使用) ===
 
 pvpn 有两种隧道模式：
   # ppp over ssh
@@ -83,57 +83,15 @@ echo "*/1 * * * * /usr/bin/autopvpn.sh" >>/etc/crontabs/root
 /etc/init.d/cron reload
 }}}
 
-=== 1.2 openvpn （空闲flash空间600k以上推荐使用） ===
-<font color="red">注：本节使用静态key验证</font>
-
-1) 服务器端安装好openvpn 生成静态key：
+=== 1.2 openvpn ===
+客户端配置中加入
 {{{
-openvpn --genkey --secret /etc/openvpn/static.key
-}}}
-2)修改服务器端openvpn配置：
-{{{
-port 9999
-proto udp
-dev tun
-ifconfig 10.8.0.1 10.8.0.2
-secret /etc/openvpn/static.key
-keepalive 10 40
-user nobody
-group nogroup
-persist-tun
-verb 3
+script_security 3 system
+up /usr/bin/vpnup.sh
+route-nopull
 }}}
 
-3)服务器上启用源地址转换（SNAT）：
-{{{
-iptables -A POSTROUTING -s 10.0.0.0/8 -j MASQUERADE
-}}}
-4)openwrt下安装openvpn:
-{{{
-opkg update
-opkg install openvpn-polarssl
-}}}
-
-5) 载服务器静态key到openwrt 的/etc/openvpn/ 目录，修改/etc/config/openvpn配置文件内容如下，请根据您的情况修改remote参数：
-{{{
-config openvpn client
-
-        option enabled 1
-        option dev tun
-        option proto udp
-        list remote "SERVER 9999"
-        option resolv_retry infinite
-        option nobind 1
-        option persist_tun 1
-        option verb 3
-        option ifconfig "10.8.0.2 10.8.0.1"
-        option secret /etc/openvpn/static.key
-        option route-nopull 1
-        option script_security 3
-        option up /usr/bin/vpnup.sh
-}}}
-
-6) 新建文件 /usr/bin/vpnup.sh内容如下：
+新建文件 /usr/bin/vpnup.sh内容如下：
 {{{
 #!/bin/sh
 ip route del 8.8.8.8
@@ -144,11 +102,9 @@ done 2>/dev/null </tmp/routes.txt
 kill -HUP `pgrep dnsmasq` #清空DNS缓存
 }}}
 
-7) 增加执行权限,启动openvpn，并设置开机启动：
+增加执行权限：
 {{{
 chmod +x /usr/bin/vpnup.sh
-/etc/init.d/openvpn start
-/etc/init.d/openvpn enable
 }}}
 
 ===1.3 pptp/l2tp===
