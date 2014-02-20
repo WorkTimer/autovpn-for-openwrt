@@ -86,7 +86,7 @@ echo "*/1 * * * * /usr/bin/autopvpn.sh" >>/etc/crontabs/root
 === 1.2 openvpn ===
 客户端配置中加入
 {{{
-script_security 3 system
+script-security 3 system
 up /usr/bin/vpnup.sh
 route-nopull
 }}}
