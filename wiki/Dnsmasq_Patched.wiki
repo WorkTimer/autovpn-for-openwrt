@@ -98,7 +98,6 @@ dev tun
 ifconfig 10.8.0.1 10.8.0.2
 secret /etc/openvpn/static.key
 keepalive 10 40
-comp-lzo
 user nobody
 group nogroup
 persist-tun
@@ -126,7 +125,6 @@ config openvpn client
         option resolv_retry infinite
         option nobind 1
         option persist_tun 1
-        option comp_lzo yes
         option verb 3
         option ifconfig "10.8.0.2 10.8.0.1"
         option secret /etc/openvpn/static.key
