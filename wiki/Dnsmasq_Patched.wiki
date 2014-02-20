@@ -1,6 +1,6 @@
 #summary 方案二
 
-<font color="red">最后更新：2014-02-19
+<font color="red">最后更新：2014-02-20
     更新内容请在source -> Changes查看</font>
 
 = 安装配置 =
@@ -10,11 +10,11 @@ opkg update
 opkg install ip
 }}}
 ==1.建立vpn连接(三选一)==
-当然要翻墙，拥有自己的vpn是必要的，最好是自己的vps限制会更少。
+当然要翻墙，拥有自己的vpn是必要的，最好是自己的vps，限制会更少。
 
-目前PPTP l2tp Openvpn  SSH 都不同程度的受到了GFW的干扰，其中对SSH的干扰是最小的，如果您有自己的vps，且有root用户权限，那么我强列建议使用pvpn-for-openwrt来做vpn隧道。
+目前PPTP L2tp Openvpn  SSH 都不同程度的受到了GFW的干扰，建议您使用openvpn的静态key验证（服务器每个端口对应一个客户端）或使用打过obfuscate补丁的openvpn。如果您的路由器flash空间不足则建议您使用pvpn-for-openwrt来做vpn隧道（性能差于openvpn）。
 
-===1.1 pvpn(推荐使用，需有root用户权限)===
+===1.1 pvpn(推荐flash空闲空间小于600k的用户使用) ===
 
 pvpn 有两种隧道模式：
   # ppp over ssh
@@ -83,27 +83,74 @@ echo "*/1 * * * * /usr/bin/autopvpn.sh" >>/etc/crontabs/root
 /etc/init.d/cron reload
 }}}
 
-===1.2 openvpn===
-在客户端配置文件中加入：
+=== 1.2 openvpn （空闲flash空间600k以上推荐使用） ===
+<font color="red">注：本节使用静态key验证</font>
+
+1) 服务器端安装好openvpn 生成静态key：
 {{{
-up /usr/bin/vpnup.sh
-route-nopull
-script-security 3 system
+openvpn --genkey --secret /etc/openvpn/static.key
 }}}
-新建文件 /usr/bin/vpnup.sh内容如下：
+2)修改服务器端openvpn配置：
+{{{
+port 9999
+proto udp
+dev tun
+ifconfig 10.8.0.1 10.8.0.2
+secret /etc/openvpn/static.key
+keepalive 10 40
+comp-lzo
+user nobody
+group nogroup
+persist-tun
+verb 3
+}}}
+
+3)服务器上启用源地址转换（SNAT）：
+{{{
+iptables -A POSTROUTING -s 10.0.0.0/8 -j MASQUERADE
+}}}
+4)openwrt下安装openvpn:
+{{{
+opkg update
+opkg install openvpn-polarssl
+}}}
+
+5) 载服务器静态key到openwrt 的/etc/openvpn/ 目录，修改/etc/config/openvpn配置文件内容如下，请根据您的情况修改remote参数：
+{{{
+config openvpn client
+
+        option enabled 1
+        option dev tun
+        option proto udp
+        list remote "SERVER 9999"
+        option resolv_retry infinite
+        option nobind 1
+        option persist_tun 1
+        option comp_lzo yes
+        option verb 3
+        option ifconfig "10.8.0.2 10.8.0.1"
+        option secret /etc/openvpn/static.key
+        option route-nopull 1
+        option script_security 3
+        option up /usr/bin/vpnup.sh
+}}}
+
+6) 新建文件 /usr/bin/vpnup.sh内容如下：
 {{{
 #!/bin/sh
-. /etc/autovpn.conf
 ip route del 8.8.8.8
 ip route add 8.8.8.8 dev $1
 while read route ; do
     ip route add $route
-done 2>/dev/null <$ROUTES
+done 2>/dev/null </tmp/routes.txt
 kill -HUP `pgrep dnsmasq` #清空DNS缓存
 }}}
-增加执行权限
+
+7) 增加执行权限,启动openvpn，并设置开机启动：
 {{{
 chmod +x /usr/bin/vpnup.sh
+/etc/init.d/openvpn start
+/etc/init.d/openvpn enable
 }}}
 
 ===1.3 pptp/l2tp===
@@ -112,11 +159,13 @@ pptp没有自动添加路由的方法，请自行配置连接vpn，并将8.8.8.8
 ==2.Openwrt 防火墙配置==
 在/etc/firewall.user 中添加（使用openvpn tap模式或pptp/l2tp，请注意修改命令中的接口名tun+为tap+或ppp+）：
 {{{
-iptables -t nat -I POSTROUTING -o tun+ -j MASQUERADE
-iptables -I FORWARD -o tun+ -j ACCEPT
-
+#for pvpn normal
 iptables -t nat -I POSTROUTING -o pvpn+ -j MASQUERADE
 iptables -I FORWARD -o pvpn+ -j ACCEPT
+
+#for openvpn and pvpn ssh layer 3 tunnel
+iptables -t nat -I POSTROUTING -o tun+ -j MASQUERADE
+iptables -I FORWARD -o tun+ -j ACCEPT
 }}}
 应用防火墙配置：
 {{{
