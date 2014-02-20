@@ -12,7 +12,7 @@ opkg install ip
 ==1.建立vpn连接(三选一)==
 当然要翻墙，拥有自己的vpn是必要的，最好是自己的vps，限制会更少。
 
-目前PPTP L2tp Openvpn  SSH 都不同程度的受到了GFW的干扰，建议您使用openvpn的静态key验证（服务器每个端口对应一个客户端）或使用打过obfuscate补丁的openvpn。如果您的路由器flash空间不足则建议您使用pvpn-for-openwrt来做vpn隧道（性能差于openvpn）。
+目前PPTP L2tp Openvpn  SSH 都不同程度的受到了GFW的干扰，其中对SSH干扰是最小的，如果您的路由器flash空间足够则强列建议您使用pvpn-for-openwrt来做vpn隧道。如果使用openvpn建议使用静态key验证（服务器每个端口对应一个客户端）或使用打过obfuscate补丁的openvpn。
 
 ===1.1 pvpn(推荐flash空闲空间小于600k的用户使用) ===
 
