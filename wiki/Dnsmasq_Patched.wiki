@@ -27,7 +27,7 @@ pvpn 有两种隧道模式：
 {{{
 wget -O /usr/bin/pvpn http://pvpn-for-openwrt.googlecode.com/svn/trunk/pvpn
 wget -O /usr/bin/autopvpn.sh http://autovpn-for-openwrt.googlecode.com/svn/trunk/script/autopvpn.sh
-#如果使用ssh layer3模式修改autopvpn.sh 文件中pvpn 所在行为：pvpn -t ssh-3 root@$SSH_SERVER 8.8.8.8
+#如果使用ssh layer3模式修改autopvpn.sh 文件中pvpn 所在行为：pvpn -t ssh-3 ......
 wget -O /etc/autovpn.conf http://autovpn-for-openwrt.googlecode.com/svn/trunk/script/autovpn.conf
 chmod +x /usr/bin/pvpn /usr/bin/autopvpn.sh
 }}}
@@ -38,6 +38,7 @@ SSH_SERVER=ssh-server             #ssh服务器ip或域名，必需修改
 SSH_PORT=22                       #ssh服务器端口
 SSH_KEY=/root/.ssh/id_rsa         #私钥文件
 SSH_KEY_PUB=/root/.ssh/id_rsa.pub #公钥文件
+DEV=`ifconfig |grep -e "tun[0-9]\|pvpn"|cut -d" " -f 1` #vpn接口
 ROUTES=/tmp/routes.txt            #路由表保存文件
 }}}
 
