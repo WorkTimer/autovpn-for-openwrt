@@ -14,7 +14,7 @@ opkg install ip
 
 目前PPTP L2tp Openvpn  SSH 都不同程度的受到了GFW的干扰，其中对SSH干扰是最小的，如果您的路由器flash空间足够则强列建议您使用pvpn-for-openwrt来做vpn隧道。如果使用openvpn建议使用打过obfuscate补丁的openvpn（未测试）。
 
-===1.1 pvpn(推荐使用) ===
+===1.1 pvpn(推荐使用，需有root用户权限) ===
 
 pvpn 有两种隧道模式：
   # ppp over ssh
