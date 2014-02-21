@@ -17,4 +17,4 @@ server=/google.com/8.8.8.8
 = 安装配置 =
 
   # [https://code.google.com/p/autovpn-for-openwrt/wiki/All_in_one 快速部署]
-  # [https://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_Patched 全手动部署]
+  # [https://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_Patched 逐步部署]
