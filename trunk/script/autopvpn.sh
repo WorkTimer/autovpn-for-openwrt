@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ps |grep -v grep|grep -qe "ssh.*-TCf\|pppd ifname pvpn"
+ps w|grep -v grep|grep -qe "ssh.*-TCf\|pppd ifname pvpn"
 if [ $? -ne 0 ] ;then
     . /etc/autovpn.conf
     echo "[ `date +'%Y/%m/%d %H:%M:%S'` ] restart pvpn" >>/tmp/autopvpn.log
