@@ -22,6 +22,8 @@ pvpn 有两种隧道模式：
 
 更具体的使用方法请移步至：[https://code.google.com/p/pvpn-for-openwrt/ pvpn-for-openwrt 项目主页]。
 
+非root用户使用pvpn建立连接的方法见:[https://code.google.com/p/pvpn-for-openwrt/wiki/pvpn_nonroot 非root多用户pvpn服务器配置]
+
 
 1) 下载pvpn for openwrt、autopvpn.sh、autovpn.conf 到 openwrt 相应目录下，并添加执行权限：
 {{{
