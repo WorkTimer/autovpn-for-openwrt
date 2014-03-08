@@ -1,6 +1,6 @@
 #summary 方案二
 
-<font color="red">最后更新：2014-02-20
+<font color="red">最后更新：2014-03-08
     更新内容请在source -> Changes查看</font>
 
 = 安装配置 =
@@ -12,7 +12,7 @@ opkg install ip
 ==1.建立vpn连接(三选一)==
 当然要翻墙，拥有自己的vpn是必要的，最好是自己的vps，限制会更少。
 
-目前PPTP L2tp Openvpn  SSH 都不同程度的受到了GFW的干扰，其中对SSH干扰是最小的，如果您的路由器flash空间足够则强列建议您使用pvpn-for-openwrt来做vpn隧道。如果使用openvpn建议使用打过obfuscate补丁的openvpn（未测试）。
+目前PPTP L2tp Openvpn  SSH 都不同程度的受到了GFW的干扰，其中对SSH干扰是最小的，所以强烈建议您使用pvpn-for-openwrt来做vpn隧道。如果使用openvpn建议使用打过obfuscate补丁的openvpn（未测试）。
 
 ===1.1 pvpn(推荐使用，需有root用户权限) ===
 
@@ -77,7 +77,7 @@ echo "PermitTunnel yes" >>/etc/ssh/sshd_config
 iptables -A POSTROUTING -s 10.0.0.0/8 -j MASQUERADE
 }}}
 
-6) 手动执行/usr/bin/autopvpn.sh ，首次连接可能会提示是否接被服务器公钥，接受之后不会再提示，然后将autopvpn.sh 加入计划任务：
+6) 手动执行/usr/bin/autopvpn.sh ，首次连接可能会提示是否接受服务器公钥，接受之后不会再提示，然后将autopvpn.sh 加入计划任务：
 {{{
 echo "*/1 * * * * /usr/bin/autopvpn.sh" >>/etc/crontabs/root
 }}}
@@ -134,6 +134,7 @@ iptables -I FORWARD -o tun+ -j ACCEPT
 
    * [http://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq_patched_2.66-3_ar71xx.ipk dnsmasq_patched_2.66-3_ar71xx.ipk ] (适用于基于Atheros：AR7xxx/AR9xxx的路由器，如tp-link wr703n，水星mw4530r等) 
    * [http://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq_patched_2.66-5_ramips_24kec.ipk dnsmasq_patched_2.66-5_ramips_24kec.ipk]（适用于基于ralink：RT3x5x/RT5350主板的路由器，如华美a100,a1,a2） 
+   * [http://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq_2.66-3_ramips-HuaWei_HG255D-dreambox-MIPS_24KC.ipk dnsmasq_2.66-3_ramips-dreambox-MIPS_24KC.ipk]（由网友提供，同样适用基于ralink：RT3x5x/RT5350主板使用dreambox 12.08.28系统的路由器） 
 
 
 上传到路由器，进行安装：
