@@ -10,6 +10,7 @@
 
 为了降低配置难度，我已经制作好了64位 deb 包。用的官方源里 dnsmasq-base 的源码，打完补丁编译制作的，所以包的质量是有保证的，您直接下载安装替换系统现有的包即可。
  * [http://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq-base_2.66-4ubuntu1_amd64.deb linuxmint16 x64 dnsmasq-base] (理论上ubuntu 13.10也适用)
+ * [https://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq-base_2.68-1_amd64.deb linuxmint17 x64 dnsmasq-base] (理论上ubuntu 14.04也适用)
 
 下载后执行下面命令安装：
 {{{
