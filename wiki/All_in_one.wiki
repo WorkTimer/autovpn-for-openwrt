@@ -1,5 +1,5 @@
 #summary 集成包安装
-<font color="red">最后更新：2014-02-14
+<font color="red">最后更新：2014-07-16
     更新内容请在source -> Changes查看</font>
 
 = Openwrt端配置 =
@@ -67,6 +67,13 @@ ssh server 上启用源地址转换（SNAT），执行以下代码，并加入/e
 iptables -A POSTROUTING -s 10.0.0.0/8 -j MASQUERADE
 }}}
 
+安装ppp包
+{{{
+#debian、ubuntu 服务器执行下面命令安装
+apt-get install ppp
+#centos服务器执行下面命令安装
+yum install ppp
+}}}
 至此openwrt就具备了翻墙功能
 
 = 新增翻墙域名 =
