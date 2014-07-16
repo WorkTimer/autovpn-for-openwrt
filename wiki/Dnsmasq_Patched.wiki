@@ -1,6 +1,6 @@
 #summary 方案二
 
-<font color="red">最后更新：2014-03-08
+<font color="red">最后更新：2014-07-16
     更新内容请在source -> Changes查看</font>
 
 = 安装配置 =
@@ -77,7 +77,16 @@ echo "PermitTunnel yes" >>/etc/ssh/sshd_config
 iptables -A POSTROUTING -s 10.0.0.0/8 -j MASQUERADE
 }}}
 
-6) 手动执行/usr/bin/autopvpn.sh ，首次连接可能会提示是否接受服务器公钥，接受之后不会再提示，然后将autopvpn.sh 加入计划任务：
+6) ssh server 上安装ppp包
+{{{
+#debian、ubuntu 执行下面命令
+apt-get install ppp
+#centos 执行下面命令
+yum install ppp
+
+}}}
+
+7) openwrt 手动执行/usr/bin/autopvpn.sh ，首次连接可能会提示是否接受服务器公钥，接受之后不会再提示，然后将autopvpn.sh 加入计划任务：
 {{{
 echo "*/1 * * * * /usr/bin/autopvpn.sh" >>/etc/crontabs/root
 }}}
