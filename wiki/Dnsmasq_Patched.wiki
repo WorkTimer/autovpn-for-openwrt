@@ -204,7 +204,13 @@ chmod +x /usr/bin/routeadd.sh
 至此配置完成
 
 ==6.验证排错==
-在openwrt路由器上执行下面命令（请不要使用ping）：
+在openwrt检查vpn接口（pvpnXX tunXX）有没有生成：
+ifconfig
+如果没有看到vpn接口，检查是整可以通过密钥验证登陆ssh server，执行：
+ssh -i .ssh/id_rsa root@<ssh-server>
+如果能顺利免密码登陆，起检查/etc/autovpn.conf 的配置。
+
+如vpn接口已经存，在openwrt路由器上执行下面命令（请不要使用ping）：
 {{{
 nslookup <被墙域名> 127.0.0.1
 }}}
@@ -223,7 +229,8 @@ cat /tmp/info.txt
 }}}
  		
 如果文件不存在，或所有者不为root，都是因为dnsmasq没正确配置。 		
-如果info.txt所有者为root，且内容为ip地址列表，说明dnsmasq配置正确，但脚本没能正确把ip加入路由表。首先请检查脚本里VPN接口名在系统中是否存在。如一切正常，请联系我。 
+如果info.txt所有者为root，且内容为ip地址列表，说明dnsmasq配置正确，但脚本没能正确把ip加入路由表，请向我报告bug。
+如一切正常，请检查openwrt firewall.user 有无增加自定义规则，服务器检查iptables 规则、路由功能有无启用。 
 
 *另请注意*：电脑系统、手机系统、和dnsmasq都会缓存dns解析结果，在使用缓存中的dns结果时，不会触发调用脚本添加路由表的操作，所以调整dnsmasq配置后，请断开手机、电脑的网络，然后重新恢复网络连接，并在openwrt 上执行： 		
 {{{ 		
