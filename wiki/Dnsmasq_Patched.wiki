@@ -207,8 +207,8 @@ chmod +x /usr/bin/routeadd.sh
 在openwrt检查vpn接口（pvpnXX tunXX）有没有生成：
 ifconfig
 如果没有看到vpn接口，检查是整可以通过密钥验证登陆ssh server，执行：
-ssh -i .ssh/id_rsa root@<ssh-server>
-如果能顺利免密码登陆，起检查/etc/autovpn.conf 的配置。
+ssh -i .ssh/id_rsa root@ssh-server
+如果能顺利免密码登陆，请检查/etc/autovpn.conf 的配置。
 
 如vpn接口已经存，在openwrt路由器上执行下面命令（请不要使用ping）：
 {{{
