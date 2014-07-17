@@ -74,7 +74,7 @@ echo "PermitTunnel yes" >>/etc/ssh/sshd_config
 
 5) ssh server 上启用路由功能和源地址转换（SNAT）：
 {{{
-iptables -A POSTROUTING -s 10.0.0.0/8 -j MASQUERADE
+iptables -t nat -A POSTROUTING -s 10.0.0.0/8 -j MASQUERADE
 echo "net.ipv4.ip_forward=1" >>/etc/sysctl.conf
 sysctl -p
 }}}
