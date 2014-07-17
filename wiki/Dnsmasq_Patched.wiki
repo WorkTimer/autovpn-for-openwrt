@@ -1,6 +1,6 @@
 #summary 方案二
 
-<font color="red">最后更新：2014-07-16
+<font color="red">最后更新：2014-07-17
     更新内容请在source -> Changes查看</font>
 
 = 安装配置 =
@@ -72,10 +72,14 @@ echo "PermitTunnel yes" >>/etc/ssh/sshd_config
 /etc/init.d/ssh reload
 }}}
 
-5) ssh server 上启用源地址转换（SNAT）：
+5) ssh server 上启用路由功能和源地址转换（SNAT）：
 {{{
 iptables -A POSTROUTING -s 10.0.0.0/8 -j MASQUERADE
+echo "net.ipv4.ip_forward=1" >>/etc/sysctl.conf
+sysctl -p
 }}}
+
+
 
 6) ssh server 上安装ppp包
 {{{
