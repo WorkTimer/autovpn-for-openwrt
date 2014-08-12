@@ -35,7 +35,7 @@ ROUTES=/tmp/routes.txt            #路由表保存文件
 . /etc/autovpn.conf
 mkdir /root/.ssh
 dropbearkey -t rsa -s 1024 -f $SSH_KEY|grep -v "Public key portion is:\|Fingerprint" >$SSH_KEY_PUB
-cat /root/.ssh/id_rsa.pub |ssh -p $SSH_PORT root@$SSH_SERVER "mkdir ~/.ssh;cat >>~/.ssh/authorized_keys"
+cat /root/.ssh/id_rsa.pub |ssh -p $SSH_PORT root@$SSH_SERVER "mkdir ~/.ssh;cat >>~/.ssh/authorized_keys;chmod 700 ~/.ssh;chmod 600 .ssh/*"
 }}}
 
 防火墙配置文件/etc/firewall.user加下以下内容：
