@@ -19,4 +19,5 @@ server=/google.com/8.8.8.8
   # 快速部署
     * Barrier Breaker 14.07 (coming soon)
     * [https://code.google.com/p/autovpn-for-openwrt/wiki/All_in_one Attitude Adjustment 12.09]
+    * [https://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_patched_for_linuxmint for linuxmint (ubuntu ?)]
   # [https://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_Patched 逐步部署]
