@@ -1,4 +1,4 @@
-#summary 方案二 for linuxmint (ubuntu?)
+#summary Dnsmasq_patched for linuxmint (ubuntu?)
 
 = 配置vpn =
 略（详见 [https://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_Patched#1.%E5%BB%BA%E7%AB%8Bvpn%E8%BF%9E%E6%8E%A5%28%E4%B8%89%E9%80%89%E4%B8%80%29 Dnsmasq_Patched for openwrt]）
