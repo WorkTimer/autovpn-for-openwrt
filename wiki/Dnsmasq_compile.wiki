@@ -12,7 +12,7 @@ wget http://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq-2.71-src-autovp
 wget http://autovpn-for-openwrt.googlecode.com/svn/trunk/dnsmasq-2.66-src-autovpn-for-openwrt.tar.gz
 }}}
 
-以上源码包包含了 patch 和必要的所有文件，下载后解压替换源码目录中的dnsmasq。attitude_adjustment_12.09版源码替换 package/dnsmasq ，Barrier Breaker 14.07版源码替换 package/network/services/dnsmasq。
+以上源码包包含了 patch 和必要的所有文件，attitude_adjustment_12.09下载后解压替换 package/dnsmasq 文件夹，Barrier Breaker 14.07下载后解压替换 package/network/services/dnsmasq 文件夹。
 
 然后开始编译：
 {{{
