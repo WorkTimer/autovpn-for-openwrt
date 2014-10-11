@@ -1,6 +1,6 @@
-#summary 方案二
+#summary 方案一
 
-<font color="red">最后更新：2014-07-17
+<font color="red">最后更新：2014-10-11
     更新内容请在source -> Changes查看</font>
 
 = 安装配置 =
