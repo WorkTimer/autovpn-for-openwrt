@@ -1,4 +1,4 @@
-#summary 方案二
+#summary Dnsmasq维护ipset表
 
 *注意：*从dnsmasq 2.66 版开发内置了ipset支持，openwrt 官方dnsmasq默认没有启用ipset，您可以自行编译并启用ipset，来替换本文档第3节中的ipset-dns软件，但相比之下使用ipset依然是不推荐的。
 
