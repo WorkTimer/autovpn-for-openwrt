@@ -15,8 +15,11 @@ server=/google.com/8.8.8.8
 
 = 安装配置 =
 
+请根据您的系统版本选择相应的部署文档
   # 快速部署
     * Barrier Breaker 14.07 (coming soon)
     * [https://code.google.com/p/autovpn-for-openwrt/wiki/All_in_one Attitude Adjustment 12.09]
-    * [https://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_patched_for_linuxmint for linuxmint (ubuntu ?)]
-  # [https://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_Patched 逐步部署]
+  # 逐步部署
+    * [https://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_Patched Attitude Adjustment 12.09]
+---- 附 ----
+  * [https://code.google.com/p/autovpn-for-openwrt/wiki/Dnsmasq_patched_for_linuxmint linuxmint下部署 (ubuntu？)]
