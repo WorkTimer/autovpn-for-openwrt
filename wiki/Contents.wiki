@@ -15,7 +15,6 @@ server=/google.com/8.8.8.8
 
 = 安装配置 =
 
-请根据您的系统版本选择相应的部署文档
   # 快速部署
     * [https://code.google.com/p/autovpn-for-openwrt/wiki/All_in_one_netifd 适用于Openwrt 12.09、14.07 (集成包数量较多，还没进行严格测试，如发现问题请报告)]
   # 逐步部署
