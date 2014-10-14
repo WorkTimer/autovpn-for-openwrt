@@ -71,7 +71,7 @@ echo "server=/autovpn-for-openwrt.googlecode.com/8.8.8.8" >>/etc/autovpn/vpn.con
 /etc/init.d/dnsmasq restart
 }}}
 
-让所有 *.googlecode.com 子域名翻墙
+让所有 `*`.googlecode.com 子域名翻墙
 {{{
 echo "server=/googlecode.com/8.8.8.8" >>/etc/autovpn/vpn.conf
 /etc/init.d/dnsmasq restart
