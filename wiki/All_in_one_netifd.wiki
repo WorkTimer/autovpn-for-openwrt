@@ -13,7 +13,7 @@
 
   * Barrier Breaker 14.07:
       * [http://autovpn-for-openwrt.googlecode.com/svn/trunk/packages/dnsmasq_all-in-one-14.07_2.71-3_ar71xx.ipk dnsmasq_all-in-one-14.07_2.71-3_ar71xx.ipk] (适用于基于Atheros：AR7xxx/AR9xxx的路由器，如tp-link wr703n，水星mw4530r等)
-      * [http://autovpn-for-openwrt.googlecode.com/svn/trunk/packages/dnsmasq_all-in-one-14.07_2.71-3_ramips_24kec.ipk dnsmasq_all-in-one-14.07_2.71-3_ar71xx.ipk] （适用于基于ralink：RT3x5x/RT5350主板的路由器，如华美a100,a1,a2）
+      * [http://autovpn-for-openwrt.googlecode.com/svn/trunk/packages/dnsmasq_all-in-one-14.07_2.71-3_ramips_24kec.ipk dnsmasq_all-in-one-14.07_2.71-3_ramips_24kec.ipk ] （适用于基于ralink：RT3x5x/RT5350主板的路由器，如华美a100,a1,a2）
 
 上传到openwrt路由器/tmp/下，进行安装：
 {{{
