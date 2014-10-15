@@ -62,7 +62,7 @@ apt-get install ppp
 yum install ppp
 }}}
 
-如想客户端连接服务器时使用普通用户，请参看这篇文章 [https://code.google.com/p/pvpn-for-openwrt/wiki/pvpn_nonroot ppp over ssh（普通用户）服务器端配置]
+如想客户端连接服务器时使用普通用户，请参看这篇文章 [https://code.google.com/p/autovpn-for-openwrt/wiki/PPPoS_nonroot ppp over ssh（普通用户）服务器端配置]
 
 = 新增翻墙域名 =
 如让域名 autovpn-for-openwrt.googlecode.com 翻墙
