@@ -12,8 +12,8 @@
       * [http://autovpn-for-openwrt.googlecode.com/svn/trunk/packages/dnsmasq_all-in-one-12.09_2.71-4_ramips_24kec.ipk dnsmasq_all-in-one-12.09_2.71-4_ramips_24kec.ipk] （适用于基于ralink：RT3x5x/RT5350主板的路由器，理论上支持所有使用mipsel类型的路由器，以使用MTK（Ramips）解决方案的品牌为主）
 
   * Barrier Breaker 14.07:
-      * [http://autovpn-for-openwrt.googlecode.com/svn/trunk/packages/dnsmasq_all-in-one-14.07_2.71-4_ar71xx.ipk dnsmasq_all-in-one-14.07_2.71-4_ar71xx.ipk] (适用于基于Atheros：AR7xxx/AR9xxx的路由器，如tp-link wr703n，水星mw4530r等)
-      * [http://autovpn-for-openwrt.googlecode.com/svn/trunk/packages/dnsmasq_all-in-one-14.07_2.71-4_ramips_24kec.ipk dnsmasq_all-in-one-14.07_2.71-4_ramips_24kec.ipk ] （适用于基于ralink：RT3x5x/RT5350主板的路由器，如华美a100,a1,a2）
+      * [http://autovpn-for-openwrt.googlecode.com/svn/trunk/packages/dnsmasq_all-in-one-14.07_2.71-4_ar71xx.ipk dnsmasq_all-in-one-14.07_2.71-4_ar71xx.ipk] (适用于基于Atheros：AR7xxx/AR9xxx的路由器，理论上支持所有使用mipseb类型CPU的路由器，以tp-link、水星等品牌为主)
+      * [http://autovpn-for-openwrt.googlecode.com/svn/trunk/packages/dnsmasq_all-in-one-14.07_2.71-4_ramips_24kec.ipk dnsmasq_all-in-one-14.07_2.71-4_ramips_24kec.ipk ] （适用于基于ralink：RT3x5x/RT5350主板的路由器，理论上支持所有使用mipsel类型的路由器，以使用MTK（Ramips）解决方案的品牌为主）
 
 上传到openwrt路由器/tmp/下，进行安装：
 {{{
