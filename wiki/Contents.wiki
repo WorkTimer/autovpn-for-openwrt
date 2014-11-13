@@ -4,7 +4,7 @@
 = 原理简介 =
  # 为防止DNS污染，ssh over ppp 连接建立后会自动将IP：8.8.8.8 加入路由表，出口指向vpn接口（防止8.8.8.8被劫持）
  # dnsmasq 中把被墙域名的DNS服务器配置为8.8.8.8（server=/xxxx.com/8.8.8.8）
- # dnsmasq 收到用户dns请求，检查域名是否存在配置中，如查到则将查询请求转发到指定服务器(8.8.8.8)，调用指定的脚本将解析结果中的IP加入路由表出口为vpn接口（server-script=/path/to/routeadd.sh）
+ # dnsmasq 收到用户dns请求，检查域名是否存在配置中，如查到则将查询请求转发到指定服务器(8.8.8.8)，dnsmasq得到解析结果调用指定的脚本将解析结果中的IP加入路由表出口为vpn接口（server-script=/path/to/routeadd.sh）
 
 以google.com为例
 将被墙域名配置到dnsmasq.conf中（openwrt为/etc/config/dhcp），通过8.8.8.8解析：
