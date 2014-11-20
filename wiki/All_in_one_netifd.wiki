@@ -30,16 +30,16 @@ dropbearkey -t rsa -s 1024 -f $SSH_KEY|sed -n '/Public key portion is:/{n;p}' >/
 cat /root/.ssh/id_rsa.pub |ssh -p <PORT> root@<SSH_SERVER> "mkdir ~/.ssh;cat >>~/.ssh/authorized_keys;chmod 700 ~/.ssh;chmod 600 .ssh/*"
 }}}
 
-登录 LUCI（openwrt web配置界面） 进入 Network（网络）->Interface(接口) 页面，按下图步骤新建VPN接口：
-[http://autovpn-for-openwrt.googlecode.com/svn/trunk/images/1.png]
+登录 LUCI（openwrt web配置界面） 进入 Network（网络）->Interface(接口) 页面，按下图步骤新建VPN接口（如图片不能正常显示，请点击图片下载后查看）：
+<a href="http://autovpn-for-openwrt.googlecode.com/svn/trunk/images/1.png">[http://autovpn-for-openwrt.googlecode.com/svn/trunk/images/1.png]</a>
 
-[http://autovpn-for-openwrt.googlecode.com/svn/trunk/images/2.png]
+<a href="http://autovpn-for-openwrt.googlecode.com/svn/trunk/images/2.png">[http://autovpn-for-openwrt.googlecode.com/svn/trunk/images/2.png]</a>
 
-[http://autovpn-for-openwrt.googlecode.com/svn/trunk/images/3.png]
+<a href="http://autovpn-for-openwrt.googlecode.com/svn/trunk/images/3.png">[http://autovpn-for-openwrt.googlecode.com/svn/trunk/images/3.png]</a>
 
-[http://autovpn-for-openwrt.googlecode.com/svn/trunk/images/4.png]
+<a href="http://autovpn-for-openwrt.googlecode.com/svn/trunk/images/4.png">[http://autovpn-for-openwrt.googlecode.com/svn/trunk/images/4.png]</a>
 
-[http://autovpn-for-openwrt.googlecode.com/svn/trunk/images/5.png]
+<a href="http://autovpn-for-openwrt.googlecode.com/svn/trunk/images/5.png">[http://autovpn-for-openwrt.googlecode.com/svn/trunk/images/5.png]</a>
 
 
 = 服务器端配置 =
